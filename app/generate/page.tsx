@@ -1,5 +1,8 @@
+import { appendFile } from "fs/promises";
 import { redirect } from "next/navigation";
-import puppeteer from "puppeteer";
+import { extractSVGs } from "~/lib/extract-svgs";
+import { mergePDFs } from "~/lib/merge-pdfs";
+import { urlToPDF } from "~/lib/url-to-pdf";
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -10,82 +13,39 @@ export default async function Page({ searchParams }: Props) {
     return redirect("/");
   }
 
-  const browser = await puppeteer.launch({
-    defaultViewport: { width: 1920, height: 1080 },
-  });
-  const page = await browser.newPage();
-  await page.goto(searchParams.url, { waitUntil: "load" });
+  const svgs = await extractSVGs(searchParams.url);
+  const pdfs = await Promise.all(svgs.map(async (svg) => urlToPDF(svg)));
+  const mergedPDF = await mergePDFs(pdfs);
 
-  console.log("page loaded");
-
-  const { firstPage, totalPages } = await page.evaluate(() => {
-    const images = document.querySelectorAll("img");
-    let firstPage = "";
-    let firstPageAlt = "";
-
-    images.forEach((image) => {
-      if (image.src.includes("musescore.com/static/musescore/scoredata/g")) {
-        firstPage = image.src;
-        firstPageAlt = image.alt;
-      }
-    });
-
-    const totalPages = Number(firstPageAlt.split(" ").at(-2));
-    return { firstPage, totalPages };
-  });
-
-  console.log("first page", firstPage);
-  console.log("total pages", totalPages);
-  console.log("scrolling to bottom");
-
-  await page.mouse.move(500, 500);
-
-  let otherPages: string[] = [];
-
-  for (let i = 0; i < totalPages - 1; i++) {
-    await page.mouse.wheel({ deltaY: 1185 });
-    await new Promise((r) => setTimeout(r, 250));
-
-    const newOtherPages = await page.evaluate(() => {
-      const images = document.querySelectorAll("img");
-      const matches: string[] = [];
-
-      images.forEach((image) => {
-        if (
-          image.src.includes("s3.ultimate-guitar.com/musescore.scoredata/g/")
-        ) {
-          matches.push(image.src);
-        }
-      });
-
-      return matches;
-    });
-
-    otherPages.push(...newOtherPages);
-  }
-
-  // find unique items in otherPages array
-  otherPages = otherPages.filter((page, i) => otherPages.indexOf(page) === i);
-
-  // const path = `/tmp/${crypto.randomUUID()}.png`;
-  // await page.screenshot({ path: `public/${path}` });
-
-  await browser.close();
+  const path = `tmp/${crypto.randomUUID()}.pdf`;
+  await appendFile(`public/${path}`, Buffer.from(mergedPDF));
 
   return (
-    <main>
-      <div className="flex flex-wrap">
-        {[firstPage, ...otherPages].map((page, i) => (
+    <main className="flex flex-col gap-4 items-start">
+      <p>
+        Detected {svgs.length} page{svgs.length === 1 ? "" : "s"}.
+      </p>
+
+      <a
+        href={`/${path}`}
+        target="_blank"
+        className="border border-zinc-500 p-2 rounded-md"
+      >
+        Download PDF
+      </a>
+
+      <p>Preview:</p>
+
+      <div className="flex flex-wrap bg-zinc-400 p-4 gap-4">
+        {svgs.map((svg) => (
           <img
-            key={i}
-            src={page}
-            alt={`sheet music, page ${i + 1}`}
+            key={svg}
+            src={svg}
+            alt={`Page ${svgs.indexOf(svg) + 1}`}
             className="w-80"
           />
         ))}
       </div>
-
-      {/* <img src={path} alt="screenshot" /> */}
     </main>
   );
 }
