@@ -1,3 +1,4 @@
+import { existsSync, mkdirSync } from "fs";
 import { appendFile } from "fs/promises";
 import { redirect } from "next/navigation";
 import { extractSVGs } from "~/lib/extract-svgs";
@@ -18,6 +19,7 @@ export default async function Page({ searchParams }: Props) {
   const mergedPDF = await mergePDFs(pdfs);
 
   const path = `tmp/${crypto.randomUUID()}.pdf`;
+  existsSync("public/tmp") || mkdirSync("public/tmp");
   await appendFile(`public/${path}`, Buffer.from(mergedPDF));
 
   return (
