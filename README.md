@@ -2,7 +2,7 @@
 
 ## How to run this tool
 
-First, make sure you have node package manager (NPM) installed on your system. After cloning this repo, run `npm run dev` in the root of this project. Navigate to `http://localhost:3000` in your browser, and enter in the URL of the score from Musescore that you'd like to convert to a PDF. On my machine, it takes about a second per page to load, but your results may vary.
+First, make sure you have node package manager (NPM) installed on your system. After cloning this repo, run `npm install` and `npm run dev` in the root of the project. Navigate to `http://localhost:3000` in your browser, and enter in the URL of the score from Musescore that you'd like to convert to a PDF. On my machine, it takes about a second per page to load, but your results may vary.
 
 Running `npm run dev` is the quickest way to get up and running, though you'd probably want to actually build the project if you're running this for extended periods of time. The dev script is perfectly good if you just need to fire up the tool to convert a score or two.
 
