@@ -1,13 +1,9 @@
-import puppeteer from "puppeteer";
+import type { Browser } from "puppeteer";
 
-export async function extractSVGs(url: string) {
-  const browser = await puppeteer.launch({
-    defaultViewport: { width: 1920, height: 1080 },
-  });
+export async function extractSVGs(url: string, browser: Browser) {
   const page = await browser.newPage();
+  await page.setViewport({ width: 1920, height: 1080 });
   await page.goto(url, { waitUntil: "load" });
-
-  console.log("page loaded");
 
   const { firstPage, totalPages } = await page.evaluate(() => {
     const images = document.querySelectorAll("img");
@@ -25,14 +21,9 @@ export async function extractSVGs(url: string) {
     return { firstPage, totalPages };
   });
 
-  console.log("first page", firstPage);
-  console.log("total pages", totalPages);
-  console.log("scrolling to bottom");
-
   await page.mouse.move(500, 500);
 
   let otherPages: string[] = [];
-
   for (let i = 0; i < totalPages - 1; i++) {
     await page.mouse.wheel({ deltaY: 1185 });
     await new Promise((r) => setTimeout(r, 250));
@@ -42,11 +33,8 @@ export async function extractSVGs(url: string) {
       const matches: string[] = [];
 
       images.forEach((image) => {
-        if (
-          image.src.includes("s3.ultimate-guitar.com/musescore.scoredata/g/")
-        ) {
+        if (image.src.includes("s3.ultimate-guitar.com/musescore.scoredata/g/"))
           matches.push(image.src);
-        }
       });
 
       return matches;
@@ -56,8 +44,5 @@ export async function extractSVGs(url: string) {
   }
 
   otherPages = otherPages.filter((page, i) => otherPages.indexOf(page) === i);
-
-  await browser.close();
-
   return [firstPage, ...otherPages];
 }

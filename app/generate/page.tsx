@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync } from "fs";
 import { appendFile } from "fs/promises";
 import { redirect } from "next/navigation";
+import puppeteer from "puppeteer";
 import { extractSVGs } from "~/lib/extract-svgs";
 import { mergePDFs } from "~/lib/merge-pdfs";
 import { urlToPDF } from "~/lib/url-to-pdf";
@@ -14,18 +15,30 @@ export default async function Page({ searchParams }: Props) {
     return redirect("/");
   }
 
-  const svgs = await extractSVGs(searchParams.url);
-  const pdfs = await Promise.all(svgs.map(async (svg) => urlToPDF(svg)));
+  const startTime = Date.now();
+
+  const browser = await puppeteer.launch();
+  const svgs = await extractSVGs(searchParams.url, browser);
+  const pdfs = await Promise.all(
+    svgs.map(async (svg) => urlToPDF(svg, browser))
+  );
   const mergedPDF = await mergePDFs(pdfs);
 
   const path = `tmp/${crypto.randomUUID()}.pdf`;
   existsSync("public/tmp") || mkdirSync("public/tmp");
   await appendFile(`public/${path}`, Buffer.from(mergedPDF));
 
+  await browser.close();
+  const endTime = Date.now();
+
   return (
     <main className="flex flex-col gap-4 items-start">
       <p>
         Detected {svgs.length} page{svgs.length === 1 ? "" : "s"}.
+      </p>
+
+      <p>
+        Took {((endTime - startTime) / 1000).toFixed(2)} seconds to generate.
       </p>
 
       <a

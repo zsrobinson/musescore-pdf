@@ -1,10 +1,9 @@
-import puppeteer from "puppeteer";
+import type { Browser } from "puppeteer";
 
-export async function urlToPDF(url: string) {
+export async function urlToPDF(url: string, browser: Browser) {
   const req = await fetch(url);
   const svg = await req.text();
 
-  const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setContent(svg);
 
