@@ -2,7 +2,7 @@ import { existsSync, mkdirSync } from "fs";
 import { appendFile } from "fs/promises";
 import { redirect } from "next/navigation";
 import puppeteer from "puppeteer";
-import { extractSVGs } from "~/lib/extract-svgs";
+import { extractResources } from "~/lib/extract-resources";
 import { mergePDFs } from "~/lib/merge-pdfs";
 import { urlToPDF } from "~/lib/url-to-pdf";
 
@@ -18,9 +18,9 @@ export default async function Page({ searchParams }: Props) {
   const startTime = Date.now();
 
   const browser = await puppeteer.launch();
-  const svgs = await extractSVGs(searchParams.url, browser);
+  const resources = await extractResources(searchParams.url, browser);
   const pdfs = await Promise.all(
-    svgs.map(async (svg) => urlToPDF(svg, browser))
+    resources.map(async (resource) => urlToPDF(resource, browser))
   );
   const mergedPDF = await mergePDFs(pdfs);
 
@@ -34,11 +34,10 @@ export default async function Page({ searchParams }: Props) {
   return (
     <main className="flex flex-col gap-4 items-start">
       <p>
-        Detected {svgs.length} page{svgs.length === 1 ? "" : "s"}.
-      </p>
-
-      <p>
+        Detected {resources.length} page{resources.length === 1 ? "" : "s"}.
         Took {((endTime - startTime) / 1000).toFixed(2)} seconds to generate.
+        Score is stored as {resources.at(0)?.includes(".png") ? "PNG" : "SVG"}{" "}
+        files.
       </p>
 
       <a
@@ -52,11 +51,11 @@ export default async function Page({ searchParams }: Props) {
       <p>Preview:</p>
 
       <div className="flex flex-wrap bg-zinc-400 p-4 gap-4">
-        {svgs.map((svg) => (
+        {resources.map((resource, i) => (
           <img
-            key={svg}
-            src={svg}
-            alt={`Page ${svgs.indexOf(svg) + 1}`}
+            key={resource}
+            src={resource}
+            alt={`Page ${i + 1}`}
             className="w-80"
           />
         ))}

@@ -1,6 +1,6 @@
 import type { Browser } from "puppeteer";
 
-export async function extractSVGs(url: string, browser: Browser) {
+export async function extractResources(url: string, browser: Browser) {
   const page = await browser.newPage();
   await page.setViewport({ width: 1920, height: 1080 });
   await page.goto(url, { waitUntil: "load" });
