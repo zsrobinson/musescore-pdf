@@ -48,14 +48,14 @@ export default async function Page({ searchParams }: Props) {
           </a>
         </Button>
 
-        <Button variant="outline" asChild>
+        <Button variant="ghost" asChild>
           <a href={searchParams.url} target="_blank">
             Visit Original Score
           </a>
         </Button>
       </div>
 
-      <div className="grid w-full grid-cols-3 gap-4 rounded-lg bg-zinc-800 p-4">
+      <div className="grid w-full grid-cols-3 gap-4 rounded-lg bg-secondary p-4">
         {resources.map((resource, i) => (
           <img
             src={resource}
@@ -66,13 +66,13 @@ export default async function Page({ searchParams }: Props) {
         ))}
       </div>
 
-      <div className="flex w-full flex-col gap-2 rounded-lg border border-zinc-800 p-4">
+      <div className="flex w-full flex-col gap-2 rounded-lg border border-border p-4">
         <h3 className="text-lg font-semibold">Image Links</h3>
         <ol className="flex list-decimal flex-col gap-2">
           {resources.map((resource, i) => (
             <li
               key={i}
-              className="ml-8 break-all font-mono text-xs transition-colors hover:text-zinc-300"
+              className="ml-8 break-all font-mono text-xs text-muted-foreground transition-colors hover:text-muted-foreground/80"
             >
               <a href={resource} target="_blank">
                 {resource}

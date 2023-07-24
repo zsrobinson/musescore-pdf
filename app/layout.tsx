@@ -14,7 +14,7 @@ type Props = { children: ReactNode };
 export default function Layout({ children }: Props) {
   return (
     <html lang="en">
-      <body className="dark mx-auto flex min-h-screen max-w-5xl flex-col p-8">
+      <body className="mx-auto flex min-h-screen max-w-5xl flex-col p-8">
         <header className="flex items-center gap-2">
           <Link href="/">
             <IconFileMusic size={48} />
@@ -25,12 +25,12 @@ export default function Layout({ children }: Props) {
               <h1 className="text-2xl font-bold">Musescore PDF Generator</h1>
             </Link>
 
-            <p className="text-zinc-500">
+            <p className="text-muted-foreground">
               Please ensure that you are complying with{" "}
               <a
                 href="https://musescore.com/download-terms"
                 target="_blank"
-                className="underline"
+                className="underline underline-offset-2 transition-colors hover:text-muted-foreground/80"
               >
                 Musescore&apos;s download terms
               </a>{" "}
@@ -39,19 +39,19 @@ export default function Layout({ children }: Props) {
           </div>
         </header>
 
-        <hr className="my-4 border-zinc-800" />
+        <hr className="my-4 border-border" />
 
         {children}
 
-        <hr className="my-4 mt-16 border-zinc-800" />
+        <hr className="my-4 mt-16 border-border" />
 
         <footer className="flex flex-col items-center gap-2">
-          <p className="text-zinc-500">
+          <p className="text-muted-foreground">
             Made with <IconHeart size={16} className="mb-1 inline" /> by{" "}
             <a
               href="https://zsrobinson.com/"
               target="_blank"
-              className="underline"
+              className="underline underline-offset-2 transition-colors hover:text-muted-foreground/80"
             >
               Zachary Robinson
             </a>{" "}
@@ -59,7 +59,7 @@ export default function Layout({ children }: Props) {
             <a
               href="https://github.com/zsrobinson/musescore-pdf/"
               target="_blank"
-              className="underline"
+              className="underline underline-offset-2 transition-colors hover:text-muted-foreground/80"
             >
               GitHub
             </a>
