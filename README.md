@@ -1,5 +1,7 @@
 # Musescore PDF Generator
 
+![Screenshot of tool](https://raw.githubusercontent.com/zsrobinson/musescore-pdf/main/public/screenshot.png)
+
 ## How to run this tool
 
 First, make sure you have node package manager (NPM) installed on your system. After cloning this repo, run `npm install` and `npm run dev` in the root of the project. Navigate to `http://localhost:3000` in your browser, and enter in the URL of the score from Musescore that you'd like to convert to a PDF. On my machine, it takes about a second per page to load, but your results may vary.
