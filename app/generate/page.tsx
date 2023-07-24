@@ -32,7 +32,7 @@ export default async function Page({ searchParams }: Props) {
   const endTime = Date.now();
 
   return (
-    <main className="flex flex-col gap-4 items-start">
+    <main className="flex flex-col items-start gap-4">
       <p>
         Detected {resources.length} page{resources.length === 1 ? "" : "s"}.
         Took {((endTime - startTime) / 1000).toFixed(2)} seconds to generate.
@@ -43,14 +43,14 @@ export default async function Page({ searchParams }: Props) {
       <a
         href={`/${path}`}
         target="_blank"
-        className="border border-zinc-500 p-2 rounded-md"
+        className="rounded-md border border-zinc-500 p-2"
       >
         Download PDF
       </a>
 
       <p>Preview:</p>
 
-      <div className="flex flex-wrap bg-zinc-400 p-4 gap-4">
+      <div className="flex flex-wrap gap-4 bg-zinc-400 p-4">
         {resources.map((resource, i) => (
           <img
             key={resource}

@@ -5,7 +5,7 @@ export default function Page() {
         type="text"
         name="url"
         placeholder="Musescore URL"
-        className="border border-zinc-500 p-2 rounded-md"
+        className="rounded-md border border-zinc-500 p-2"
       />
       <button type="submit">Submit</button>
     </form>
