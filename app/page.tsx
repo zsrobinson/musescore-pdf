@@ -1,13 +1,18 @@
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+
 export default function Page() {
   return (
-    <form action="/generate" className="flex gap-2">
-      <input
+    <form action="/generate" className="flex flex-grow gap-2">
+      <Input
         type="text"
         name="url"
         placeholder="Musescore URL"
-        className="rounded-md border border-zinc-500 p-2"
+        className="w-64"
       />
-      <button type="submit">Submit</button>
+      <Button type="submit" variant="secondary">
+        Submit
+      </Button>
     </form>
   );
 }

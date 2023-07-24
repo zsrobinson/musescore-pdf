@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import "./globals.css";
 import type { Metadata } from "next";
+import { IconFileMusic, IconHeart } from "@tabler/icons-react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Musescore PDF Generator",
@@ -12,18 +14,57 @@ type Props = { children: ReactNode };
 export default function Layout({ children }: Props) {
   return (
     <html lang="en">
-      <body className="dark m-8">
-        <a href="/">
-          <h1 className="text-2xl font-bold">Musescore PDF Generator</h1>
-        </a>
-        <p className="mb-4 text-zinc-500">
-          Please ensure that you are complying with{" "}
-          <a href="https://musescore.com/download-terms" className="underline">
-            Musescore&apos;s download terms
-          </a>{" "}
-          before using this tool.
-        </p>
+      <body className="dark mx-auto flex min-h-screen max-w-5xl flex-col p-8">
+        <header className="flex items-center gap-2">
+          <Link href="/">
+            <IconFileMusic size={48} />
+          </Link>
+
+          <div>
+            <Link href="/">
+              <h1 className="text-2xl font-bold">Musescore PDF Generator</h1>
+            </Link>
+
+            <p className="text-zinc-500">
+              Please ensure that you are complying with{" "}
+              <a
+                href="https://musescore.com/download-terms"
+                target="_blank"
+                className="underline"
+              >
+                Musescore&apos;s download terms
+              </a>{" "}
+              before using this tool.
+            </p>
+          </div>
+        </header>
+
+        <hr className="my-4 border-zinc-800" />
+
         {children}
+
+        <hr className="my-4 mt-16 border-zinc-800" />
+
+        <footer className="flex flex-col items-center gap-2">
+          <p className="text-zinc-500">
+            Made with <IconHeart size={16} className="mb-1 inline" /> by{" "}
+            <a
+              href="https://zsrobinson.com/"
+              target="_blank"
+              className="underline"
+            >
+              Zachary Robinson
+            </a>{" "}
+            · View this project on{" "}
+            <a
+              href="https://github.com/zsrobinson/musescore-pdf/"
+              target="_blank"
+              className="underline"
+            >
+              GitHub
+            </a>
+          </p>
+        </footer>
       </body>
     </html>
   );

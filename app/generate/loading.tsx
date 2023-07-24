@@ -1,10 +1,10 @@
-import { IconLoader } from "@tabler/icons-react";
+import { IconLoader2 } from "@tabler/icons-react";
 
 export default async function Loading() {
   return (
-    <main>
-      Processing your URL...
-      <IconLoader className="animate-spin" />
+    <main className="flex flex-grow items-center justify-center gap-2">
+      <IconLoader2 className="animate-spin" />
+      Processing your score, this may take a few moments.
     </main>
   );
 }
