@@ -1,44 +1,29 @@
-import { existsSync, mkdirSync } from "fs";
-import { appendFile } from "fs/promises";
 import { redirect } from "next/navigation";
-import puppeteer from "puppeteer";
 import { Button } from "~/components/ui/button";
-import { extractResources } from "~/lib/extract-resources";
-import { mergePDFs } from "~/lib/merge-pdfs";
-import { urlToPDF } from "~/lib/url-to-pdf";
+import { generate } from "~/lib/generate";
 
-type Props = {
-  searchParams: { [key: string]: string | string[] | undefined };
-};
+type Props = { searchParams: { [key: string]: string | string[] | undefined } };
 
 export default async function Page({ searchParams }: Props) {
-  if (!searchParams.url || typeof searchParams.url !== "string") {
+  if (
+    !searchParams.url ||
+    typeof searchParams.url !== "string" ||
+    !(
+      searchParams.url.startsWith("https://musescore.com/") ||
+      searchParams.url.startsWith("https://www.musescore.com/")
+    )
+  ) {
     return redirect("/");
   }
 
-  const startTime = Date.now();
-
-  const browser = await puppeteer.launch();
-  const resources = await extractResources(searchParams.url, browser);
-  const pdfs = await Promise.all(
-    resources.map(async (resource) => urlToPDF(resource, browser))
-  );
-  const mergedPDF = await mergePDFs(pdfs);
-
-  const path = `tmp/${crypto.randomUUID()}.pdf`;
-  existsSync("public/tmp") || mkdirSync("public/tmp");
-  await appendFile(`public/${path}`, Buffer.from(mergedPDF));
-
-  await browser.close();
-  const endTime = Date.now();
+  const { path, resources, time } = await generate(searchParams.url);
 
   return (
     <main className="flex flex-grow flex-col items-start gap-4">
       <p>
         Detected {resources.length} page{resources.length === 1 ? "" : "s"}.
-        Took {((endTime - startTime) / 1000).toFixed(2)} seconds to generate.
-        Score is stored as {resources.at(0)?.includes(".png") ? "PNG" : "SVG"}{" "}
-        files.
+        Took {(time / 1000).toFixed(2)} seconds to generate. Score is stored as{" "}
+        {resources.at(0)?.includes(".png") ? "PNG" : "SVG"} files.
       </p>
 
       <div className="flex gap-2">
