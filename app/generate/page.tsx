@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { generate } from "~/lib/generate";
+import { TryAgainButton } from "../../components/try-again-button";
 
 type Props = { searchParams: { [key: string]: string | string[] | undefined } };
 
@@ -40,6 +41,8 @@ export default async function Page({ searchParams }: Props) {
             Visit Original Score
           </a>
         </Button>
+
+        <TryAgainButton />
       </div>
 
       <div className="grid w-full grid-cols-3 gap-4 rounded-lg bg-secondary p-4">
