@@ -1,8 +1,12 @@
-import { type ReactNode } from "react";
+"use client";
+
+import { useRef, ReactNode, RefObject } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
 export default function Page() {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   return (
     <main className="flex flex-grow flex-col gap-4">
       <p className="leading-relaxed">
@@ -21,20 +25,21 @@ export default function Page() {
       </p>
 
       <ul className="list-inside list-disc pl-4 leading-relaxed">
-        <li>
-          Canon in D:{" "}
-          <Code breakAll>
-            https://musescore.com/user/1809056/scores/1019991
-          </Code>
-        </li>
-        <li>
-          Für Elise - Beethoven:{" "}
-          <Code breakAll>https://musescore.com/user/19710/scores/33816</Code>
-        </li>
-        <li>
-          Clair de Lune - Debussy:{" "}
-          <Code breakAll>https://musescore.com/user/19710/scores/58553</Code>
-        </li>
+        <ExampleURL
+          name="Canon in D"
+          url="https://musescore.com/user/1809056/scores/1019991"
+          inputRef={inputRef}
+        />
+        <ExampleURL
+          name="Für Elise - Beethoven"
+          url="https://musescore.com/user/19710/scores/33816"
+          inputRef={inputRef}
+        />
+        <ExampleURL
+          name="Lacrimosa - Requiem"
+          url="https://musescore.com/user/7554051/scores/2275496"
+          inputRef={inputRef}
+        />
       </ul>
 
       <form action="/generate" className="flex gap-2">
@@ -43,6 +48,7 @@ export default function Page() {
           name="url"
           placeholder="Musescore URL"
           className="w-64"
+          ref={inputRef}
         />
         <Button type="submit">Submit</Button>
       </form>
@@ -69,20 +75,34 @@ export default function Page() {
   );
 }
 
-function Code({
-  children,
-  breakAll,
-}: {
-  children: ReactNode;
-  breakAll?: boolean;
-}) {
+function Code({ children }: { children: ReactNode }) {
   return (
-    <span
-      className={`rounded-md bg-secondary p-1 font-mono text-sm ${
-        breakAll ? "break-all" : ""
-      }`}
-    >
+    <span className="rounded-md bg-secondary p-1 font-mono text-sm">
       {children}
     </span>
+  );
+}
+
+function ExampleURL({
+  name,
+  url,
+  inputRef,
+}: {
+  name: string;
+  url: string;
+  inputRef: RefObject<HTMLInputElement>;
+}) {
+  return (
+    <li>
+      {name + ": "}
+      <span
+        className="cursor-pointer break-all rounded-md bg-secondary p-1 font-mono text-sm"
+        onClick={() => {
+          if (inputRef.current) inputRef.current.value = url;
+        }}
+      >
+        {url}
+      </span>
+    </li>
   );
 }
