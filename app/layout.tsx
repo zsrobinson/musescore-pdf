@@ -16,7 +16,7 @@ export default function Layout({ children }: Props) {
     <html lang="en">
       <body className="mx-auto flex min-h-screen max-w-5xl flex-col p-8">
         <header className="flex items-center gap-2">
-          <Link href="/">
+          <Link href="/" tabIndex={-1}>
             <IconFileMusic size={48} />
           </Link>
 
@@ -46,7 +46,7 @@ export default function Layout({ children }: Props) {
         <hr className="my-4 mt-16 border-border" />
 
         <footer className="flex flex-col items-center gap-2">
-          <p className="text-muted-foreground">
+          <p className="text-center text-muted-foreground">
             Made with <IconHeart size={16} className="mb-1 inline" /> by{" "}
             <a
               href="https://zsrobinson.com/"
