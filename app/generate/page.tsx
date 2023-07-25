@@ -31,7 +31,7 @@ export default async function Page({ searchParams }: Props) {
 
       <div className="flex gap-2">
         <Button asChild>
-          <a href={`/${path}`} target="_blank">
+          <a href={path} target="_blank">
             Download PDF
           </a>
         </Button>
