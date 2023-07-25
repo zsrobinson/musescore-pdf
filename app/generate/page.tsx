@@ -21,9 +21,11 @@ export default async function Page({ searchParams }: Props) {
   return (
     <main className="flex flex-grow flex-col items-start gap-4">
       <p>
-        Detected {resources.length} page{resources.length === 1 ? "" : "s"}.
-        Took {(time / 1000).toFixed(2)} seconds to generate. Score is stored as{" "}
-        {resources.at(0)?.includes(".png") ? "PNG" : "SVG"} files.
+        This score took {(time / 1000).toFixed(2)} seconds to generate and was
+        stored as {resources.at(0)?.includes(".png") ? "PNG" : "SVG"} files.
+        We&apos;ve detected {resources.length} page
+        {resources.length === 1 ? "" : "s"} on this score, please make sure this
+        is the correct amount and try again if not.
       </p>
 
       <div className="flex gap-2">

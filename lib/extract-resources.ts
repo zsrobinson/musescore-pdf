@@ -26,7 +26,7 @@ export async function extractResources(url: string, browser: Browser) {
   let otherPages: string[] = [];
   for (let i = 0; i < totalPages - 1; i++) {
     await page.mouse.wheel({ deltaY: 1185 });
-    await new Promise((r) => setTimeout(r, 250));
+    await new Promise((r) => setTimeout(r, 300));
 
     const newOtherPages = await page.evaluate(() => {
       const images = document.querySelectorAll("img");
