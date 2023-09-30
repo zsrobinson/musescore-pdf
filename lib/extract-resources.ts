@@ -3,7 +3,8 @@ import type { Browser } from "puppeteer";
 export async function extractResources(url: string, browser: Browser) {
   const page = await browser.newPage();
   await page.setViewport({ width: 1920, height: 1080 });
-  await page.goto(url, { waitUntil: "load" });
+  await page.goto(url, { waitUntil: "domcontentloaded" });
+  await new Promise((r) => setTimeout(r, 500)); // wait ig?
 
   const { firstPage, totalPages } = await page.evaluate(() => {
     const images = document.querySelectorAll("img");
@@ -26,7 +27,7 @@ export async function extractResources(url: string, browser: Browser) {
   let otherPages: string[] = [];
   for (let i = 0; i < totalPages - 1; i++) {
     await page.mouse.wheel({ deltaY: 1185 });
-    await new Promise((r) => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 500));
 
     const newOtherPages = await page.evaluate(() => {
       const images = document.querySelectorAll("img");
